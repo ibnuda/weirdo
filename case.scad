@@ -1,10 +1,12 @@
 use_2u_left = false;
 use_2u_right = true;
 bottom_thickness = 5;
-cave_thickness = use_2u_left ? 7 : 5;
-plate_thickness = use_2u_left ? 3 : 5;
-lower_thickness = bottom_thickness + cave_thickness;
-sandwich_thickness = lower_thickness + plate_thickness;
+function cave_thickness(use_2u) = use_2u ? 7 : 5;
+function plate_thickness(use_2u) = use_2u ? 3 : 5;
+function lower_thickness(use_2u) = bottom_thickness +
+                                   cave_thickness(use_2u);
+function sandwich_thickness(use_2u) = lower_thickness(use_2u) +
+                                      plate_thickness(use_2u);
 
 module sector(radius, angles, fn = 60)
 {
@@ -80,8 +82,7 @@ shape_of_pcb()
     }
 }
 
-module
-base_case(use_2u)
+module base_case(use_2u)
 {
     difference()
     {
@@ -91,22 +92,22 @@ base_case(use_2u)
             linear_extrude(height = 0.1) { shape_of_pcb(); }
         }
         translate([ 0, 0, bottom_thickness ])
-            linear_extrude(height = cave_thickness) shape_of_pcb();
-        translate([ 0, 0, lower_thickness ])
-            linear_extrude(height = plate_thickness) alpha_holes(14);
-        translate([ 0, 0, sandwich_thickness ]) linear_extrude(height = 18)
+            linear_extrude(height = cave_thickness(use_2u)) shape_of_pcb();
+        translate([ 0, 0, lower_thickness(use_2u) ])
+            linear_extrude(height = plate_thickness(use_2u)) alpha_holes(14);
+        translate([ 0, 0, sandwich_thickness(use_2u) ]) linear_extrude(height = 18)
             alpha_holes(19.5);
         if (use_2u) {
-            translate([ 93, -104, lower_thickness ]) rotate([ 0, 0, 323.4 ])
-                linear_extrude(height = plate_thickness) thumb_2u();
-            translate([ 93, -104, sandwich_thickness ]) rotate([ 0, 0, 323.4 ])
+            translate([ 93, -104, lower_thickness(use_2u) ]) rotate([ 0, 0, 323.4 ])
+                linear_extrude(height = plate_thickness(use_2u)) thumb_2u();
+            translate([ 93, -104, sandwich_thickness(use_2u) ]) rotate([ 0, 0, 323.4 ])
                 linear_extrude(height = 18)
                     square(size = [ 19.5, 39 ], center = true);
         } else {
-            translate([ 98.7, -96.3, lower_thickness ]) rotate([ 0, 0, 233.4 ])
-                linear_extrude(height = plate_thickness)
+            translate([ 98.7, -96.3, lower_thickness(use_2u) ]) rotate([ 0, 0, 233.4 ])
+                linear_extrude(height = plate_thickness(use_2u))
                     square(size = [ 14, 14 ], center = true);
-            translate([ 98.7, -96.3, sandwich_thickness ])
+            translate([ 98.7, -96.3, sandwich_thickness(use_2u) ])
                 rotate([ 0, 0, 233.4 ]) linear_extrude(height = 18)
                     square(size = [ 19.5, 19.5 ], center = true);
         }
@@ -132,7 +133,7 @@ bottom_left_case()
     difference()
     {
         left_case();
-        translate([ 0, -400, lower_thickness ])
+        translate([ 0, -400, lower_thickness(use_2u_left) ])
             cube(size = [ 400, 400, 30 ], center = false);
     }
 }
@@ -143,7 +144,7 @@ upper_left_case()
     difference()
     {
         left_case();
-        translate([ 0, -400, (0 - 30 + lower_thickness) ])
+        translate([ 0, -400, (0 - 30 + lower_thickness(use_2u_left)) ])
             cube(size = [ 400, 400, 30 ], center = false);
     }
 }
@@ -153,14 +154,14 @@ right_case()
 {
     difference()
     {
-        translate([235,0,0]) mirror(v=[1,0,0]) base_case(use_2u_right);
+        translate([ 235, 0, 0 ]) mirror(v = [ 1, 0, 0 ])
+            base_case(use_2u_right);
         translate([ 176, -91, bottom_thickness ]) rotate([ 0, 0, 36.6 ])
             linear_extrude(height = 18) shape_of_rj45();
     }
 }
 
-module
-base_plate(use_2u)
+module base_plate(use_2u)
 {
     difference()
     {
@@ -192,13 +193,13 @@ right_plate()
 {
     difference(use_2u_right)
     {
-        translate([235,0,0]) mirror(v=[1,0,0]) base_plate();
+        translate([ 235, 0, 0 ]) mirror(v = [ 1, 0, 0 ]) base_plate();
         translate([ 176, -91, 0 ]) rotate([ 0, 0, 36.6 ]) shape_of_rj45();
     }
 }
 
 left_case();
-translate([30, 0, 0]) right_case();
+translate([ 30, 0, 0 ]) right_case();
 // bottom_left_case();
 // translate([ 150, 0, -lower_thickness ]) upper_left_case();
 
