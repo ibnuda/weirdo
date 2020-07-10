@@ -872,10 +872,8 @@ Wire Wire Line
 	3900 1600 3900 2200
 Connection ~ 3900 2200
 Wire Wire Line
-	3900 2200 3900 2800
+	3900 2200 3900 2600
 Connection ~ 3900 2800
-Wire Wire Line
-	3900 2800 3900 3100
 Text GLabel 4100 1200 2    50   Input ~ 0
 ROWA0
 Text GLabel 4100 1800 2    50   Input ~ 0
@@ -1004,8 +1002,6 @@ Connection ~ 3000 5000
 Wire Wire Line
 	3800 4400 3800 5000
 Connection ~ 3800 5000
-Wire Wire Line
-	3800 5000 3800 5600
 Connection ~ 3800 5600
 Wire Wire Line
 	3800 5600 3800 5900
@@ -1020,10 +1016,48 @@ Connection ~ 2200 5600
 Wire Wire Line
 	2200 5600 2200 5900
 Wire Wire Line
-	1400 5000 1400 5600
+	1400 5000 1400 5425
 Connection ~ 1400 5600
 Wire Wire Line
 	1400 5600 1400 5900
 Text GLabel 6750 4050 0    50   Input ~ 0
 ROWB1
+Wire Wire Line
+	3900 2800 3900 3100
+$Comp
+L weirdo:switch switch34
+U 1 1 5F08D9D6
+P 3600 2600
+F 0 "switch34" H 3600 2855 50  0000 C CNN
+F 1 "switch" H 3600 2764 50  0000 C CNN
+F 2 "footprints:1u-single" H 3600 2600 60  0001 C CNN
+F 3 "" H 3600 2600 60  0000 C CNN
+	1    3600 2600
+	1    0    0    -1  
+$EndComp
+Connection ~ 3900 2600
+Wire Wire Line
+	3900 2600 3900 2800
+$Comp
+L weirdo:switch switch33
+U 1 1 5F09338C
+P 1100 5425
+F 0 "switch33" H 1100 5680 50  0000 C CNN
+F 1 "switch" H 1100 5589 50  0000 C CNN
+F 2 "footprints:1u-single" H 1100 5425 60  0001 C CNN
+F 3 "" H 1100 5425 60  0000 C CNN
+	1    1100 5425
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 2600 3300 2800
+Connection ~ 3300 2800
+Connection ~ 1400 5425
+Wire Wire Line
+	1400 5425 1400 5600
+Wire Wire Line
+	3800 5000 3800 5600
+Wire Wire Line
+	800  5425 800  5600
+Connection ~ 800  5600
 $EndSCHEMATC
