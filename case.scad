@@ -1,5 +1,5 @@
 use_2u_left = false;
-use_2u_right = true;
+use_2u_right = false;
 bottom_thickness = 5;
 function cave_thickness(use_2u) = use_2u ? 7 : 5;
 function plate_thickness(use_2u) = use_2u ? 3 : 5;
@@ -57,7 +57,7 @@ shape_of_promicro()
 module
 shape_of_rj45()
 {
-    translate([ -5.5, -39, 0 ]) square(size = [ 21, 44 ], center = false);
+    translate([ -4, -39, 0 ]) square(size = [ 17, 44 ], center = false);
 }
 
 module
@@ -123,7 +123,7 @@ left_case()
         translate([ 72, -98, bottom_thickness ]) rotate([ 0, 0, 53.4 ])
             linear_extrude(height = 12) shape_of_promicro();
         translate([ 50.5, -86, bottom_thickness ]) rotate([ 0, 0, 323.4 ])
-            linear_extrude(height = 18) shape_of_rj45();
+            linear_extrude(height = 22) shape_of_rj45();
     }
 }
 
@@ -139,7 +139,7 @@ bottom_left_case()
 }
 
 module
-upper_left_case()
+top_left_case()
 {
     difference()
     {
@@ -156,8 +156,30 @@ right_case()
     {
         translate([ 235, 0, 0 ]) mirror(v = [ 1, 0, 0 ])
             base_case(use_2u_right);
-        translate([ 176, -91, bottom_thickness ]) rotate([ 0, 0, 36.6 ])
-            linear_extrude(height = 18) shape_of_rj45();
+        translate([ 177, -91, bottom_thickness ]) rotate([ 0, 0, 36.6 ])
+            linear_extrude(height = 22) shape_of_rj45();
+    }
+}
+
+module
+bottom_right_case()
+{
+    difference()
+    {
+        right_case();
+        translate([ 77, -400, lower_thickness(use_2u_right) ])
+            cube(size = [ 400, 400, 30 ], center = false);
+    }
+}
+
+module
+top_right_case()
+{
+    difference()
+    {
+        right_case();
+        translate([ 77, -400, (0 - 30 + lower_thickness(use_2u_right)) ])
+            cube(size = [ 400, 400, 30 ], center = false);
     }
 }
 
@@ -194,14 +216,31 @@ right_plate()
     difference(use_2u_right)
     {
         translate([ 235, 0, 0 ]) mirror(v = [ 1, 0, 0 ]) base_plate();
-        translate([ 176, -91, 0 ]) rotate([ 0, 0, 36.6 ]) shape_of_rj45();
+        translate([ 177, -91, 0 ]) rotate([ 0, 0, 36.6 ]) shape_of_rj45();
     }
 }
 
-left_case();
-translate([ 30, 0, 0 ]) right_case();
+module
+left_pcb()
+{
+    union()
+    {
+        color("navy") linear_extrude(height = 1.6) shape_of_pcb();
+        color("pink") translate([ 50.5, -86, 1.7 ]) rotate([ 0, 0, 323.4 ]) linear_extrude(height = 14) shape_of_rj45();
+        color("gray") translate([ 72, -98, 0 ]) rotate([ 0, 0, 53.4 ]) linear_extrude(height = 7) shape_of_promicro();
+        color("aqua") linear_extrude(height = 16) alpha_holes();
+    }
+}
+
+
+// left_case();
+// right_case();
+
+// bottom_right_case();
+// translate([ -150, 0, -lower_thickness(use_2u_right) ]) top_right_case();
+
 // bottom_left_case();
-// translate([ 150, 0, -lower_thickness ]) upper_left_case();
+// translate([ 150, 0, -lower_thickness(use_2u_left) ]) top_left_case();
 
 // left_plate();
 // right_plate();
